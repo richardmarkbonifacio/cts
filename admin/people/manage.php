@@ -11,36 +11,67 @@ if(isset($_GET['id']) && !empty($_GET['id'])){
 ?>
 <form action="" id="people-frm">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-6">			
 			<div id="msg" class="form-group"></div>
-			<input type="hidden" name='id' value="<?php echo isset($_GET['id']) ? $_GET['id'] : '' ?>">
+			<input type="hidden" name='id' value="<?php echo isset($_GET['id']) ? $_GET['id'] : '' ?>"></div>
+		<div class="col-md-6"></div>
+	</div>
+
+	<!-- profile pic -->
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<div class="form-group d-flex justify-content-center">
+				<img src="<?php echo validate_image(isset($image_path) ? $image_path : '') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
+			</div>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<!-- <label for="" class="control-label">Image</label> -->
+				<div class="custom-file">
+		          <input type="file" class="custom-file-input rounded-circle" id="customFile" name="img" onchange="displayImg(this,$(this))">
+		          <label class="custom-file-label" for="customFile">Choose Image</label>
+		        </div>
+			</div>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+
+	<!-- name -->
+	<div class="row">
+		<div class="col-md-4">
 			<div class="form-group">
 				<label for="firstname" class="control-label">First Name</label>
 				<input type="text" class="form-control form-control-sm" name="firstname" id="firstname" value="<?php echo isset($firstname) ? $firstname : '' ?>" required>
 			</div>
+		</div>
+		<div class="col-md-4">
 			<div class="form-group">
 				<label for="lastname" class="control-label">Last Name</label>
 				<input type="text" class="form-control form-control-sm" name="lastname" id="lastname" value="<?php echo isset($lastname) ? $lastname : '' ?>" required>
 			</div>
+		</div>
+		<div class="col-md-4">
 			<div class="form-group">
 				<label for="middlename" class="control-label">Middle Name</label>
 				<input type="text" class="form-control form-control-sm" name="middlename" id="middlename" value="<?php echo isset($middlename) ? $middlename : '' ?>" placeholder="(optional)">
 			</div>
-			<div class="form-group">
-				<label for="email" class="control-label">Email</label>
-				<input type="text" class="form-control form-control-sm" name="email" id="email" value="<?php echo isset($email) ? $email : '' ?>" required>
-			</div>
-			<div class="form-group">
-				<label for="contact" class="control-label">Contact #</label>
-				<input type="text" class="form-control form-control-sm" name="contact" id="contact" value="<?php echo isset($contact) ? $contact : '' ?>" required>
-			</div>
 		</div>
-		<div class="col-md-6">
-			<br>
+	</div>
+
+	<!-- address -->
+	<div class="row">
+		<div class="col-md-4">
 			<div class="form-group">
 				<label for="address" class="control-label">Address</label>
-				<textarea type="text" class="form-control form-control-sm" name="address" id="address" required ><?php echo isset($address) ? $address : '' ?></textarea>
+				<input type="text" class="form-control form-control-sm" name="address" id="address" required ><?php echo isset($address) ? $address : '' ?>
 			</div>
+		</div>
+		<div class="col-md-4">
 			<div class="form-group">
 				<label for="city_id" class="control-label">City/State</label>
 				<select name="city_id" id="city_id" class="custom-select custom-select-sm select2" required>
@@ -53,6 +84,8 @@ if(isset($_GET['id']) && !empty($_GET['id'])){
 					<?php endwhile; ?>
 				</select>
 			</div>
+		</div>
+		<div class="col-md-4">
 			<div class="form-group">
 				<label for="zone_id" class="control-label">Barangay/Zone</label>
 				<select name="zone_id" id="zone_id" class="custom-select custom-select-sm" required>
@@ -65,18 +98,30 @@ if(isset($_GET['id']) && !empty($_GET['id'])){
 					<?php endwhile; ?>
 				</select>
 			</div>
+		</div>
+	</div>
+
+	<!-- contact -->
+	<div class="row">
+		<div class="col-md-6">
 			<div class="form-group">
-				<label for="" class="control-label">Image</label>
-				<div class="custom-file">
-		          <input type="file" class="custom-file-input rounded-circle" id="customFile" name="img" onchange="displayImg(this,$(this))">
-		          <label class="custom-file-label" for="customFile">Choose file</label>
-		        </div>
+				<label for="email" class="control-label">Email</label>
+				<input type="text" class="form-control form-control-sm" name="email" id="email" value="<?php echo isset($email) ? $email : '' ?>" required>
 			</div>
-			<div class="form-group d-flex justify-content-center">
-				<img src="<?php echo validate_image(isset($image_path) ? $image_path : '') ?>" alt="" id="cimg" class="img-fluid img-thumbnail">
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				<label for="contact" class="control-label">Contact #</label>
+				<input type="text" class="form-control form-control-sm" name="contact" id="contact" value="<?php echo isset($contact) ? $contact : '' ?>" required>
 			</div>
 		</div>
 	</div>
+
+	
+
+
+
+
 </form>
 <style>
 	img#cimg{
@@ -124,7 +169,10 @@ if(isset($_GET['id']) && !empty($_GET['id'])){
 				},
 				success:function(resp){
 				if(resp == 1){
-					location.reload();
+					
+					//location.reload();
+					window.location.replace("?page=people&id=6");
+
 				}else if(resp == 3){
 					var _frm = $('#people-frm #msg')
 					var _msg = "<div class='alert alert-danger text-white err_msg'><i class='fa fa-exclamation-triangle'></i> Person already exists.</div>"

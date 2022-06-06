@@ -14,7 +14,7 @@ Class OverridePeople extends DBConnection {
 		$data = '';
 
         $qry = $this->conn->query("INSERT INTO `people` (`id`, `code`, `email`, `firstname`, `lastname`, `middlename`, `address`, `zone_id`, `city_id`, `contact`, `image_path`) 
-                VALUES ('5', '010323691528436145', 'test@sample.com', 'test', 'test', 't', 'test', '1', '1', '1', 'uploads/1614241320_ava.jpg');");
+                VALUES ('7', '010323691528436145', 'test@sample.com', 'test', 'test', 't', 'Himamaylan City, Negros Occidental', '2', '6', '1', 'uploads/1614241320_ava.jpg');");
 				if($qry){
 					$this->settings->set_flashdata('success','Person successfully saved.');
 					return 1;

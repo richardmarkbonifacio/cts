@@ -49,6 +49,8 @@ Class People extends DBConnection {
 				$qry = $this->conn->query("INSERT INTO people set {$data}");
 				if($qry){
 					$this->settings->set_flashdata('success','Person successfully saved.');
+
+
 					return 1;
 				}else{
 					return 2;

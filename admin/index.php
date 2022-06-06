@@ -8,6 +8,8 @@
      <?php require_once('inc/navigation.php') ?>
               
      <?php $page = isset($_GET['page']) ? $_GET['page'] : 'home';  ?>
+     <?php $id = isset($_GET['id']) ? $_GET['id'] : '';  ?>
+     <? echo 'rawrs'; ?>
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper" style="min-height: 567.854px;">
         <!-- Content Header (Page header) -->
