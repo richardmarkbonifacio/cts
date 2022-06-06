@@ -4,7 +4,8 @@ $ec_arr = array();
 $eid= isset($_GET['eid'])? $_GET['eid'] : 'all';
 $e_arr['all'] = "All";
 $ec_arr['all'] = "";
-$date = isset($_GET['eid'])? $_GET['date'] : date('Y-m-d');
+$date = isset($_GET['eid'])? $_GET['date'] : '' ;
+$edate = isset($_GET['eid'])? $_GET['edate'] : '';
 
 ?>
 <div class="col-md-12">
@@ -31,8 +32,14 @@ $date = isset($_GET['eid'])? $_GET['date'] : date('Y-m-d');
 					</div>
 					<div class="col-sm-3">
 						<div class="form-group">
-							<label for="date">Date</label>
-							<input type="date" id="date" value="<?php echo date('Y-m-d') ?>" class="form-control form-control-sm">
+							<label for="Start date">Date</label>
+							<input type="date" id="date" class="form-control form-control-sm">
+						</div>
+					</div>
+					<div class="col-sm-3">
+						<div class="form-group">
+							<label for="date">End Date</label>
+							<input type="date" id="edate"  class="form-control form-control-sm">
 						</div>
 					</div>
 					<div class="col-sm-2">
@@ -56,8 +63,69 @@ $date = isset($_GET['eid'])? $_GET['date'] : date('Y-m-d');
 					<tbody>
 						<?php
 						$i = 1;
-						$where = ($eid > 0) ? " and e.id = {$eid} " : "";
-						$tracks = $conn->query("SELECT t.*,Concat(p.firstname,' ',p.middlename,' ',p.lastname) as pname,p.code as pcode, e.name as ename,e.code as ecode from tracks t inner join people p on p.id=t.person_id inner join establishment e on. e.id = t.establishment_id where date_format(t.date_added,'%Y-%m-%d') = '{$date}' $where order by date(t.date_added) asc ");
+						echo $date;
+						if($eid == "all" && $edate == "")
+						{
+							//ALL
+							$tracks = $conn->query("select t.*,
+													Concat(p.firstname,' ',p.middlename,' ',p.lastname) as pname,
+													p.code as pcode,
+													e.name as ename,
+													e.code as ecode 
+												from tracks t 
+												inner join people p on p.id=t.person_id 
+												inner join establishment e on. e.id = t.establishment_id 
+												order by date(t.date_added) asc ");
+												
+						}
+						else if($eid != "all" && $edate == "")
+						{
+							//NO DATE WITH ID
+							$tracks = $conn->query("select t.*,
+													Concat(p.firstname,' ',p.middlename,' ',p.lastname) as pname,
+													p.code as pcode,
+													e.name as ename,
+													e.code as ecode 
+												from tracks t 
+												inner join people p on p.id=t.person_id 
+												inner join establishment e on. e.id = t.establishment_id 
+												where 
+													e.id = {$eid}  
+												order by date(t.date_added) asc ");
+												
+						}
+						else if($eid == "all" && $edate != "")
+						{
+							//WITH DATE NO ID
+							$tracks = $conn->query("select t.*,
+													Concat(p.firstname,' ',p.middlename,' ',p.lastname) as pname,
+													p.code as pcode,
+													e.name as ename,
+													e.code as ecode 
+												from tracks t 
+												inner join people p on p.id=t.person_id 
+												inner join establishment e on. e.id = t.establishment_id 
+												where 
+													t.date_added BETWEEN '{$date} 00:00:00' and '{$edate} 23:59:59'
+												order by date(t.date_added) asc ");
+												
+						}
+						else{
+							//WITH DATE AND ID
+							echo $eid;
+							$tracks = $conn->query("select t.*,
+													Concat(p.firstname,' ',p.middlename,' ',p.lastname) as pname,
+													p.code as pcode,
+													e.name as ename,
+													e.code as ecode 
+												from tracks t 
+												inner join people p on p.id=t.person_id 
+												inner join establishment e on. e.id = t.establishment_id 
+												where 
+													t.date_added BETWEEN '{$date} 00:00:00' and '{$edate} 23:59:59'  
+													and e.id = {$eid}
+												order by date(t.date_added) asc ");
+						}
 						while($row=$tracks->fetch_assoc()):
 
 						?>
@@ -121,7 +189,7 @@ $date = isset($_GET['eid'])? $_GET['date'] : date('Y-m-d');
 		$(document).ready(function(){
 			$('#filter-frm').submit(function(e){
 				e.preventDefault()
-				location.replace(_base_url_+'admin/?page=reports&eid='+$('#establishment_id').val()+'&date='+$('#date').val())
+				location.replace(_base_url_+'admin/?page=reports&eid='+$('#establishment_id').val()+'&date='+$('#date').val()+'&edate='+$('#edate').val())
 			})
 		})
 	</script>

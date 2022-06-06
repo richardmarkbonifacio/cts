@@ -78,8 +78,7 @@
 	$(document).ready(function(){
 		$('#list').dataTable()
 		$('.new_people').click(function(){
-			uni_modal("New Individual","./people/manage.php",'mid-large')
-			
+			uni_modal("New Individual","./people/manage.php",'mid-large');
 		})
 		$('.manage_people').click(function(){
 			uni_modal("Manage Individual","./people/manage.php?id="+$(this).attr('data-id'),'mid-large')
