@@ -1,9 +1,10 @@
 <style>
     .btn {
   position: relative;
-
-  width: 60%;
+  bottom: -200;
+  width: 100px;
   display: block;
+  
   margin: 30px auto;
   padding: 10;
   text-decoration: none;
@@ -26,7 +27,7 @@
 }
 
 .btn > * {
-  position: relative;
+  position: absolute;
 }
 
 .btn span {
@@ -100,12 +101,13 @@ body {
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 ">
-<img src="" id="qr_img"  
-		style="
-		width: 3in;
-		height: 3in;
-		">
-<br>
+	<img src="" id="qr_img"  
+			style="
+			width: 3in;
+			height: 3in;
+			"/>
+	<br>
+</div>
 <script>
 	function QRLoad(code){
 		document.getElementById("qr_img").src = '../../temp/'+code+'.png';
@@ -113,10 +115,17 @@ body {
 
 		// alert(code);
 	}
-
-	document.write('<a class="btn" href="http://localhost:8085/bmis/pages/resident/resident.php">Back</a>');
+	function ButtonCreate(na){
+		if(na == 0){
+			document.write('<a class="btn" href="http://localhost:8085/bmis/pages/resident/resident.php">Back</a>');
+		}
+		if(na == 1){
+			document.write('<a class="btn" href="http://localhost:8085/bmis/main/nonresident.php">Back</a>');
+		}
+	}
+	//document.write('<a class="btn" href="http://localhost:8085/bmis/pages/resident/resident.php">Back</a>');
 </script>
-</div>
+
 
 <?php 
 
@@ -142,7 +151,9 @@ Class OverridePeople extends DBConnection {
 		$lastname = $_GET['lastname'];
 		$middlename = $_GET['middlename'];
 		$address = $_GET['address'];
-
+		$na = !isset($_GET['na']) ? '0' : $_GET['na'];
+		
+		
 		if($f == "create"){
 			$code = $id.(mt_rand(0,99999999999));
 			$i=0;
@@ -180,7 +191,7 @@ Class OverridePeople extends DBConnection {
 			if(!is_file('../../temp/'.$code.'.png'))
 				QRcode::png($code, $tempDir.''.$code.'.png', QR_ECLEVEL_L, 5);
 			echo "<script type='text/javascript'>QRLoad('{$code}');</script>";
-			
+			echo "<script>ButtonCreate($na)</script>";
 		}
 		elseif($f == "update"){
 			
@@ -205,6 +216,7 @@ Class OverridePeople extends DBConnection {
 				if($qry){
 					$this->settings->set_flashdata('success','Person successfully updated.');
 					echo "<script type='text/javascript'>QRLoad('{$code}');</script>";
+					echo "<script>ButtonCreate($na)</script>";
 					
 					return 1;
 				}else{
@@ -212,6 +224,8 @@ Class OverridePeople extends DBConnection {
 				}
 			
 		}
+		
+		
     }
 }
 
